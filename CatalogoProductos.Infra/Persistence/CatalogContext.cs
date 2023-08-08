@@ -9,6 +9,14 @@ namespace CatalogoProductos.Infra.Persistence
         {
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(string.Empty);
+            }
+        }
+
         public DbSet<Product> Productos { get; set; }
     }
 }
