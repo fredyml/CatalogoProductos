@@ -1,4 +1,5 @@
-﻿using CatalogoProductos.Domain.Entities;
+﻿using CatalogoProductos.Aplication.Dtos;
+using CatalogoProductos.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogoProductos.Infra.Persistence
@@ -13,7 +14,7 @@ namespace CatalogoProductos.Infra.Persistence
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=CatalogoProductos;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer(Context.ConnectionString);
             }
         }
 

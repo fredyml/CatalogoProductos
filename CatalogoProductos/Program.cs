@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using CatalogoProductos.Filters;
 using NLog.Web;
 using CatalogoProductos.Infra.Logger;
+using CatalogoProductos.Aplication.Dtos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,8 +23,9 @@ builder.Services.AddScoped<ProductService>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+Context.ConnectionString = (builder.Configuration.GetConnectionString("CatalogoProductosConnection"));
 builder.Services.AddDbContext<CatalogContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("CatalogoProductosConnection")));
+    options.UseSqlServer(Context.ConnectionString));
 
 
 builder.Services.AddEndpointsApiExplorer();

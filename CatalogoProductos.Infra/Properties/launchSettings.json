@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "CatalogoProductos.Infra": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "CONNECTION_STRING": "Server=localhost\\\\SQLEXPRESS;Database=CatalogoProductos;Trusted_Connection=True;"
+      }
+    }
+  }
+}
