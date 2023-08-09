@@ -24,15 +24,25 @@ namespace CatalogoProductos.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ProductDTO>> PostProduct([FromBody] ProductDTO productDTO)
+        public async Task<ActionResult<ProductDTO>> PostProduct([FromBody] ProductDTO product)
         {
-            await _productService.CreateAsync(productDTO);
-            return CreatedAtAction(nameof(GetProduct), new { id = productDTO.Id }, productDTO);
+            if (!IsValidImageExtension(product.ProductImageUrl))
+            {
+                return BadRequest("La extensión de la URL de la imagen no es válida. Por favor, ingrese una URL de imagen válida.");
+            }
+
+            await _productService.CreateAsync(product);
+            return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
         }
 
         [HttpPut()]
         public async Task<IActionResult> PutProduct([FromBody] ProductDTO product)
         {
+            if (!IsValidImageExtension(product.ProductImageUrl))
+            {
+                return BadRequest("La extensión de la URL de la imagen no es válida. Por favor, ingrese una URL de imagen válida.");
+            }
+
             try
             {
                 await _productService.UpdateAsync(product);
@@ -72,6 +82,18 @@ namespace CatalogoProductos.Controllers
                 return NotFound();
 
             return Ok(product);
+        }
+
+        private bool IsValidImageExtension(string imageUrl)
+        {
+            if (!string.IsNullOrEmpty(imageUrl))
+            {
+                var extension = Path.GetExtension(imageUrl).ToLower();
+                var validExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
+                return validExtensions.Contains(extension);
+            }
+
+            return true;
         }
     }
 }
