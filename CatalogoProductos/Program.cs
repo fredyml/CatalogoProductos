@@ -3,8 +3,16 @@ using CatalogoProductos.Aplication.Services;
 using CatalogoProductos.Infra.Persistence.Repository;
 using CatalogoProductos.Infra.Persistence;
 using Microsoft.EntityFrameworkCore;
+using CatalogoProductos.Filters;
+using NLog.Web;
+using CatalogoProductos.Infra.Logger;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<CustomExceptionFilter>();
+});
 
 builder.Services.AddControllers();
 
@@ -19,6 +27,9 @@ builder.Services.AddDbContext<CatalogContext>(options =>
 
 
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<ILoggerManager, LoggerManager>();
+builder.Host.UseNLog();
+
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
