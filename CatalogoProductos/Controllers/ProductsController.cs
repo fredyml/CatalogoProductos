@@ -1,6 +1,5 @@
 ﻿using CatalogoProductos.Aplication.Dtos;
 using CatalogoProductos.Aplication.Services;
-using CatalogoProductos.Domain.Entities;
 using CatalogoProductos.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,30 +22,18 @@ namespace CatalogoProductos.Controllers
             var products = await _productService.GetAllAsync(parameters.Name, parameters.Description, parameters.Category);
             return Ok(products);
         }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
-        {
-            var product = await _productService.GetByIdAsync(id);
-            if (product == null)
-                return NotFound();
-
-            return Ok(product);
-        }
+       
 
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(ProductDTO product)
+        public async Task<ActionResult<ProductDTO>> PostProduct([FromBody] ProductDTO productDTO)
         {
-            await _productService.CreateAsync(product);
-            return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
+            await _productService.CreateAsync(productDTO);
+            return CreatedAtAction(nameof(GetProduct), new { id = productDTO.Id }, productDTO);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(int id, ProductDTO product)
+        [HttpPut()]
+        public async Task<IActionResult> PutProduct([FromBody] ProductDTO product)
         {
-            if (id != product.Id)
-                return BadRequest();
-
             try
             {
                 await _productService.UpdateAsync(product);
@@ -57,7 +44,7 @@ namespace CatalogoProductos.Controllers
             }
             catch (Exception)
             {
-                throw; 
+                throw;
             }
 
             return NoContent();
@@ -76,6 +63,15 @@ namespace CatalogoProductos.Controllers
             }
 
             return NoContent();
+        }
+
+        private async Task<ActionResult<ProductDTO>> GetProduct(int id)
+        {
+            var product = await _productService.GetByIdAsync(id);
+            if (product == null)
+                return NotFound();
+
+            return Ok(product);
         }
     }
 }
