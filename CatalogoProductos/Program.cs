@@ -7,6 +7,7 @@ using CatalogoProductos.Filters;
 using NLog.Web;
 using CatalogoProductos.Infra.Logger;
 using CatalogoProductos.Aplication.Dtos;
+using CatalogoProductos.Aplication.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,8 @@ builder.Services.AddControllers(options =>
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<CatalogContext>();
+builder.Services.AddScoped<IImageValidator, ImageValidator>();
+
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ProductService>();
 

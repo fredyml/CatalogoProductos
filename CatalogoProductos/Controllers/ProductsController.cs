@@ -1,4 +1,5 @@
 ﻿using CatalogoProductos.Aplication.Dtos;
+using CatalogoProductos.Aplication.Interfaces;
 using CatalogoProductos.Aplication.Services;
 using CatalogoProductos.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,12 @@ namespace CatalogoProductos.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly ProductService _productService;
+        private readonly IImageValidator _imageValidator;
 
-        public ProductsController(ProductService productService)
+        public ProductsController(ProductService productService, IImageValidator imageValidator)
         {
             _productService = productService;
+            _imageValidator = imageValidator;
         }
 
         [HttpGet]
@@ -26,7 +29,7 @@ namespace CatalogoProductos.Controllers
         [HttpPost]
         public async Task<ActionResult<ProductDTO>> PostProduct([FromBody] ProductDTO product)
         {
-            if (!IsValidImageExtension(product.ProductImageUrl))
+            if (!_imageValidator.IsValidImageExtension(product.ProductImageUrl))
             {
                 return BadRequest("La extensión de la URL de la imagen no es válida. Por favor, ingrese una URL de imagen válida.");
             }
@@ -35,10 +38,10 @@ namespace CatalogoProductos.Controllers
             return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
         }
 
-        [HttpPut()]
+        [HttpPut]
         public async Task<IActionResult> PutProduct([FromBody] ProductDTO product)
         {
-            if (!IsValidImageExtension(product.ProductImageUrl))
+            if (!_imageValidator.IsValidImageExtension(product.ProductImageUrl))
             {
                 return BadRequest("La extensión de la URL de la imagen no es válida. Por favor, ingrese una URL de imagen válida.");
             }
@@ -50,10 +53,6 @@ namespace CatalogoProductos.Controllers
             catch (KeyNotFoundException)
             {
                 return NotFound();
-            }
-            catch (Exception)
-            {
-                throw;
             }
 
             return NoContent();
@@ -82,18 +81,6 @@ namespace CatalogoProductos.Controllers
                 return NotFound();
 
             return Ok(product);
-        }
-
-        private bool IsValidImageExtension(string imageUrl)
-        {
-            if (!string.IsNullOrEmpty(imageUrl))
-            {
-                var extension = Path.GetExtension(imageUrl).ToLower();
-                var validExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
-                return validExtensions.Contains(extension);
-            }
-
-            return true;
         }
     }
 }
