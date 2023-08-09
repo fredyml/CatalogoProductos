@@ -1,15 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Text.Json.Serialization;
 
-namespace CatalogoProductos.Domain.Entities
+namespace CatalogoProductos.Aplication.Dtos
 {
-    public class Product
+    public class ProductDTO
     {
-        [Key]
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Category { get; set; }
         public string ProductImageUrl { get; set; }
     }
-
 }

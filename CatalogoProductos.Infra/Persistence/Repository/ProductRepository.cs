@@ -29,7 +29,7 @@ namespace CatalogoProductos.Infra.Persistence.Repository
             }
         }
 
-        public async Task<IEnumerable<Product>> GetAllAsync(string name, string description, string category, string orderBy)
+        public async Task<IEnumerable<Product>> GetAllAsync(string name, string description, string category)
         {
             var query = _context.Productos.AsQueryable();
 
@@ -41,15 +41,6 @@ namespace CatalogoProductos.Infra.Persistence.Repository
 
             if (!string.IsNullOrEmpty(category))
                 query = query.Where(p => p.Category == category);
-
-            if (orderBy == "name_asc")
-                query = query.OrderBy(p => p.Name);
-            else if (orderBy == "name_desc")
-                query = query.OrderByDescending(p => p.Name);
-            else if (orderBy == "category_asc")
-                query = query.OrderBy(p => p.Category);
-            else if (orderBy == "category_desc")
-                query = query.OrderByDescending(p => p.Category);
 
             return await query.ToListAsync();
         }

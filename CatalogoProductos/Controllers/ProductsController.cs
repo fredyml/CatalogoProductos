@@ -1,5 +1,7 @@
-﻿using CatalogoProductos.Aplication.Services;
+﻿using CatalogoProductos.Aplication.Dtos;
+using CatalogoProductos.Aplication.Services;
 using CatalogoProductos.Domain.Entities;
+using CatalogoProductos.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatalogoProductos.Controllers
@@ -16,9 +18,9 @@ namespace CatalogoProductos.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts(string name, string description, string category, string orderBy)
+        public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProducts([FromQuery] ProductQueryParameters parameters)
         {
-            var products = await _productService.GetAllAsync(name, description, category, orderBy);
+            var products = await _productService.GetAllAsync(parameters.Name, parameters.Description, parameters.Category);
             return Ok(products);
         }
 
@@ -33,14 +35,14 @@ namespace CatalogoProductos.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        public async Task<ActionResult<Product>> PostProduct(ProductDTO product)
         {
             await _productService.CreateAsync(product);
             return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(int id, Product product)
+        public async Task<IActionResult> PutProduct(int id, ProductDTO product)
         {
             if (id != product.Id)
                 return BadRequest();

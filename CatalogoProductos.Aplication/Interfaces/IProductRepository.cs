@@ -4,7 +4,7 @@ namespace CatalogoProductos.Aplication.Interfaces
 {
     public interface IProductRepository
     {
-        Task<IEnumerable<Product>> GetAllAsync(string name, string description, string category, string orderBy);
+        Task<IEnumerable<Product>> GetAllAsync(string name, string description, string category);
         Task<Product> GetByIdAsync(int id);
         Task CreateAsync(Product product);
         Task UpdateAsync(Product product);

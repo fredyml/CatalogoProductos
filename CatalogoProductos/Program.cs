@@ -2,24 +2,28 @@ using CatalogoProductos.Aplication.Interfaces;
 using CatalogoProductos.Aplication.Services;
 using CatalogoProductos.Infra.Persistence.Repository;
 using CatalogoProductos.Infra.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<CatalogContext>(/* options */);
+builder.Services.AddDbContext<CatalogContext>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ProductService>();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddDbContext<CatalogContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("CatalogoProductosConnection")));
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

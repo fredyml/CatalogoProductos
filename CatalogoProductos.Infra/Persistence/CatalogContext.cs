@@ -13,8 +13,15 @@ namespace CatalogoProductos.Infra.Persistence
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(string.Empty);
+                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=CatalogoProductos;Trusted_Connection=True;");
             }
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Product>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
         }
 
         public DbSet<Product> Productos { get; set; }
