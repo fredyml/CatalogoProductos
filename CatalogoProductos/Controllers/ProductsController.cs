@@ -19,10 +19,9 @@ namespace CatalogoProductos.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProducts([FromQuery] ProductQueryParameters parameters)
         {
-            var products = await _productService.GetAllAsync(parameters.Name, parameters.Description, parameters.Category);
+            var products = await _productService.GetAllAsync(parameters.Name, parameters.Description, parameters.Category, parameters.OrderBy, parameters.IsAscending);
             return Ok(products);
         }
-       
 
         [HttpPost]
         public async Task<ActionResult<ProductDTO>> PostProduct([FromBody] ProductDTO productDTO)
@@ -65,7 +64,8 @@ namespace CatalogoProductos.Controllers
             return NoContent();
         }
 
-        private async Task<ActionResult<ProductDTO>> GetProduct(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ProductDTO>> GetProduct(int id)
         {
             var product = await _productService.GetByIdAsync(id);
             if (product == null)

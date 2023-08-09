@@ -1,4 +1,5 @@
-﻿using CatalogoProductos.Aplication.Interfaces;
+﻿using CatalogoProductos.Aplication.Enums;
+using CatalogoProductos.Aplication.Interfaces;
 using CatalogoProductos.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,7 +30,7 @@ namespace CatalogoProductos.Infra.Persistence.Repository
             }
         }
 
-        public async Task<IEnumerable<Product>> GetAllAsync(string name, string description, string category)
+        public async Task<IEnumerable<Product>> GetAllAsync(string name, string description, string category, OrderByOptions orderBy, bool isAscending)
         {
             var query = _context.Productos.AsQueryable();
 
@@ -42,8 +43,19 @@ namespace CatalogoProductos.Infra.Persistence.Repository
             if (!string.IsNullOrEmpty(category))
                 query = query.Where(p => p.Category == category);
 
+             switch (orderBy)
+            {
+                case OrderByOptions.Name:
+                    query = isAscending ? query.OrderBy(p => p.Name) : query.OrderByDescending(p => p.Name);
+                    break;
+                case OrderByOptions.Category:
+                    query = isAscending ? query.OrderBy(p => p.Category) : query.OrderByDescending(p => p.Category);
+                    break;
+            }
+
             return await query.ToListAsync();
         }
+
 
         public async Task<Product> GetByIdAsync(int id)
         {

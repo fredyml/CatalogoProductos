@@ -1,7 +1,10 @@
-﻿namespace CatalogoProductos.Aplication.Dtos
+﻿using System.Text.Json.Serialization;
+
+namespace CatalogoProductos.Aplication.Dtos
 {
     public class ProductDTO
     {
+        [JsonIgnore]
         public int Id { get; set; }
 
         public string? Name { get; set; }

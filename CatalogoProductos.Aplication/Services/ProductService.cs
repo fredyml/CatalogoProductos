@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CatalogoProductos.Aplication.Dtos;
+using CatalogoProductos.Aplication.Enums;
 using CatalogoProductos.Aplication.Interfaces;
 using CatalogoProductos.Domain.Entities;
 
@@ -16,9 +17,9 @@ namespace CatalogoProductos.Aplication.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ProductDTO>> GetAllAsync(string name, string description, string category)
+        public async Task<IEnumerable<ProductDTO>> GetAllAsync(string name, string description, string category, OrderByOptions orderBy, bool isAscending)
         {
-            var products = await _productRepository.GetAllAsync(name, description, category);
+            var products = await _productRepository.GetAllAsync(name, description, category, orderBy, isAscending);
             return _mapper.Map<IEnumerable<ProductDTO>>(products);
         }
 
